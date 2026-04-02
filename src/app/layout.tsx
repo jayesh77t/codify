@@ -20,7 +20,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Code Craft",
-  description: "Share and run code snippets!",
+  description: "Share and run code snippets",
 };
 
 export default function RootLayout({
@@ -47,4 +47,3 @@ export default function RootLayout({
   );
 }
 
-// https://emkc.org/api/v2/piston/runtimes

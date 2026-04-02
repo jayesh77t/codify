@@ -39,8 +39,8 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
     >
       <Link href={`/snippets/${snippet._id}`} className="h-full block">
         <div
-          className="relative h-full bg-[#1e1e2e]/80 backdrop-blur-sm rounded-xl 
-          border border-[#313244]/50 hover:border-[#313244] 
+          className="relative h-full bg-white dark:bg-[#1e1e2e]/80 backdrop-blur-sm rounded-xl 
+          border border-gray-200 dark:border-[#313244]/50 hover:border-gray-300 dark:hover:border-[#313244] 
           transition-all duration-300 overflow-hidden"
         >
           <div className="p-6">
@@ -67,7 +67,7 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <span className="px-3 py-1 bg-blue-500/10 text-blue-400 rounded-lg text-xs font-medium">
+                  <span className="px-3 py-1 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-medium">
                     {snippet.language}
                   </span>
                   <div className="flex items-center gap-2 text-xs text-gray-500">
@@ -88,11 +88,10 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
                       onClick={handleDelete}
                       disabled={isDeleting}
                       className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-200
-                                  ${
-                                    isDeleting
-                                      ? "bg-red-500/20 text-red-400 cursor-not-allowed"
-                                      : "bg-gray-500/10 text-gray-400 hover:bg-red-500/10 hover:text-red-400"
-                                  }
+                                  ${isDeleting
+                          ? "bg-red-500/20 text-red-400 cursor-not-allowed"
+                          : "bg-gray-500/10 text-gray-400 hover:bg-red-500/10 hover:text-red-400"
+                        }
                                 `}
                     >
                       {isDeleting ? (
@@ -109,12 +108,12 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
             {/* Content */}
             <div className="space-y-4">
               <div>
-                <h2 className="text-xl font-semibold text-white mb-2 line-clamp-1 group-hover:text-blue-400 transition-colors">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors">
                   {snippet.title}
                 </h2>
-                <div className="flex items-center gap-3 text-sm text-gray-400">
+                <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
                   <div className="flex items-center gap-2">
-                    <div className="p-1 rounded-md bg-gray-800/50">
+                    <div className="p-1 rounded-md bg-gray-200 dark:bg-gray-800/50">
                       <User className="size-3" />
                     </div>
                     <span className="truncate max-w-[150px]">{snippet.userName}</span>
@@ -124,7 +123,7 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
 
               <div className="relative group/code">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/15 to-purple-500/5 rounded-lg opacity-0 group-hover/code:opacity-100 transition-all" />
-                <pre className="relative bg-black/30 rounded-lg p-4 overflow-hidden text-sm text-gray-300 font-mono line-clamp-3">
+                <pre className="relative bg-gray-100 dark:bg-black/30 rounded-lg p-4 overflow-hidden text-sm text-gray-800 dark:text-gray-300 font-mono line-clamp-3">
                   {snippet.code}
                 </pre>
               </div>

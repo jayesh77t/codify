@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/providers/ConvexClientProvider";
 import Footer from "@/components/Footer";
 import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,7 +20,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Code Craft",
-  description: "Share and run code snippets",
+  description: "Share and run code snippets!",
 };
 
 export default function RootLayout({
@@ -28,12 +29,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
+    <ClerkProvider afterSignOutUrl="/sign-in">
+      <html lang="en" suppressHydrationWarning>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-b from-gray-900 to-gray-950 text-gray-100 flex flex-col`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 text-gray-900 dark:from-gray-900 dark:to-gray-950 dark:text-gray-100 flex flex-col`}
         >
-          <ConvexClientProvider>{children}</ConvexClientProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem storageKey="codecraft-theme">
+            <ConvexClientProvider>{children}</ConvexClientProvider>
+          </ThemeProvider>
 
           <Footer />
 

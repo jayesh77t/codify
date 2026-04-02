@@ -2,7 +2,8 @@
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { atomOneDark, atomOneLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { useTheme } from "next-themes";
 
 interface CodeBlockProps {
   code: string;
@@ -11,6 +12,7 @@ interface CodeBlockProps {
 
 const CodeBlock = ({ code, language }: CodeBlockProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { theme } = useTheme();
   const lines = code.split("\n");
   const displayCode = isExpanded ? code : lines.slice(0, 6).join("\n");
 
@@ -18,11 +20,11 @@ const CodeBlock = ({ code, language }: CodeBlockProps) => {
     <div className="relative">
       <SyntaxHighlighter
         language={language.toLowerCase()}
-        style={atomOneDark}
+        style={theme === "dark" ? atomOneDark : atomOneLight}
         customStyle={{
           padding: "1rem",
           borderRadius: "0.5rem",
-          background: "rgba(0, 0, 0, 0.4)",
+          background: theme === "dark" ? "rgba(0, 0, 0, 0.4)" : "rgba(0, 0, 0, 0.05)",
           margin: 0,
         }}
       >

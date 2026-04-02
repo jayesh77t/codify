@@ -1,7 +1,7 @@
 import { CodeEditorState } from "./../types/index";
 import { LANGUAGE_CONFIG } from "@/app/(root)/_constants";
 import { create } from "zustand";
-import { Monaco } from "@monaco-editor/react";
+import type { editor as MonacoEditor } from "monaco-editor";
 
 const getInitialState = () => {
   // if we're on the server, return default values
@@ -38,11 +38,11 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
 
     getCode: () => get().editor?.getValue() || "",
 
-    setEditor: (editor: Monaco) => {
+    setEditor: (editorInstance: MonacoEditor.IStandaloneCodeEditor) => {
       const savedCode = localStorage.getItem(`editor-code-${get().language}`);
-      if (savedCode) editor.setValue(savedCode);
+      if (savedCode) editorInstance.setValue(savedCode);
 
-      set({ editor });
+      set({ editor: editorInstance });
     },
 
     setTheme: (theme: string) => {
@@ -83,32 +83,73 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
       set({ isRunning: true, error: null, output: "" });
 
       try {
-        const runtime = LANGUAGE_CONFIG[language].pistonRuntime;
-        const response = await fetch("https://emkc.org/api/v2/piston/execute", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            language: runtime.language,
-            version: runtime.version,
-            files: [{ content: code }],
-          }),
-        });
+        const runtime = LANGUAGE_CONFIG[language].judge0Runtime;
 
-        const data = await response.json();
+        // Step 1: Create submission
+        const submissionResponse = await fetch(
+          "https://ce.judge0.com/submissions?base64_encoded=false&wait=false",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              source_code: code,
+              language_id: runtime.languageId,
+            }),
+          }
+        );
 
-        console.log("data back from piston:", data);
+        const submissionData = await submissionResponse.json();
 
-        // handle API-level erros
-        if (data.message) {
-          set({ error: data.message, executionResult: { code, output: "", error: data.message } });
+        if (submissionData.message) {
+          set({ error: submissionData.message, executionResult: { code, output: "", error: submissionData.message } });
           return;
         }
 
-        // handle compilation errors
-        if (data.compile && data.compile.code !== 0) {
-          const error = data.compile.stderr || data.compile.output;
+        const token = submissionData.token;
+
+        // Step 2: Poll for results
+        let result;
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        while (attempts < maxAttempts) {
+          await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait 1 second
+
+          const resultResponse = await fetch(
+            `https://ce.judge0.com/submissions/${token}?base64_encoded=false`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          result = await resultResponse.json();
+
+          // Status ID 1 = In Queue, 2 = Processing
+          if (result.status.id > 2) {
+            break;
+          }
+
+          attempts++;
+        }
+
+        if (!result || attempts >= maxAttempts) {
+          set({
+            error: "Execution timeout",
+            executionResult: { code, output: "", error: "Execution timeout" },
+          });
+          return;
+        }
+
+        console.log("Judge0 result:", result);
+
+        // Handle compilation errors (status 6)
+        if (result.status.id === 6 && result.compile_output) {
+          const error = result.compile_output;
           set({
             error,
             executionResult: {
@@ -120,8 +161,9 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
           return;
         }
 
-        if (data.run && data.run.code !== 0) {
-          const error = data.run.stderr || data.run.output;
+        // Handle runtime errors (status 5, 7-12)
+        if ((result.status.id >= 5 && result.status.id !== 3) || result.stderr) {
+          const error = result.stderr || result.message || "Runtime error";
           set({
             error,
             executionResult: {
@@ -133,18 +175,28 @@ export const useCodeEditorStore = create<CodeEditorState>((set, get) => {
           return;
         }
 
-        // if we get here, execution was successful
-        const output = data.run.output;
-
-        set({
-          output: output.trim(),
-          error: null,
-          executionResult: {
-            code,
+        // Status 3 = Accepted (success)
+        if (result.status.id === 3 || result.stdout) {
+          const output = result.stdout || "";
+          set({
             output: output.trim(),
             error: null,
-          },
-        });
+            executionResult: {
+              code,
+              output: output.trim(),
+              error: null,
+            },
+          });
+        } else {
+          set({
+            error: result.status.description || "Unknown error",
+            executionResult: {
+              code,
+              output: "",
+              error: result.status.description || "Unknown error",
+            },
+          });
+        }
       } catch (error) {
         console.log("Error running code:", error);
         set({

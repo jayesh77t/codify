@@ -41,22 +41,22 @@ function ThemeSelector() {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-48 group relative flex items-center gap-2 px-4 py-2.5 bg-[#1e1e2e]/80 hover:bg-[#262637] 
-        rounded-lg transition-all duration-200 border border-gray-800/50 hover:border-gray-700"
+        className="w-48 group relative flex items-center gap-2 px-4 py-2.5 bg-gray-200/80 dark:bg-[#1e1e2e]/80 hover:bg-gray-300/90 dark:hover:bg-[#262637] 
+        rounded-lg transition-all duration-200 border border-gray-300/50 dark:border-gray-800/50 hover:border-gray-400 dark:hover:border-gray-700"
       >
         {/* hover state bg decorator */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity" />
 
-        <Palette className="w-4 h-4 text-gray-400 group-hover:text-gray-300 transition-colors" />
+        <Palette className="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors" />
 
-        <span className="text-gray-300 min-w-[80px] text-left group-hover:text-white transition-colors">
+        <span className="text-gray-700 dark:text-gray-300 min-w-[80px] text-left group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
           {currentTheme?.label}
         </span>
 
         {/* color indicator */}
 
         <div
-          className="relative w-4 h-4 rounded-full border border-gray-600 group-hover:border-gray-500 transition-colors"
+          className="relative w-4 h-4 rounded-full border border-gray-400 dark:border-gray-600 group-hover:border-gray-500 transition-colors"
           style={{ background: currentTheme?.color }}
         />
       </motion.button>

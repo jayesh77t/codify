@@ -7,7 +7,7 @@ type LanguageConfig = Record<
     id: string;
     label: string;
     logoPath: string;
-    pistonRuntime: { language: string; version: string };
+    judge0Runtime: { languageId: number };
     monacoLanguage: string;
     defaultCode: string;
   }
@@ -18,7 +18,7 @@ export const LANGUAGE_CONFIG: LanguageConfig = {
     id: "javascript",
     label: "JavaScript",
     logoPath: "/javascript.png",
-    pistonRuntime: { language: "javascript", version: "18.15.0" }, // api that we're gonna be using
+    judge0Runtime: { languageId: 63 }, // JavaScript (Node.js 12.14.0)
     monacoLanguage: "javascript",
     defaultCode: `// JavaScript Playground
 const numbers = [1, 2, 3, 4, 5];
@@ -40,7 +40,7 @@ console.log('Sum of numbers:', sum);`,
     id: "typescript",
     label: "TypeScript",
     logoPath: "/typescript.png",
-    pistonRuntime: { language: "typescript", version: "5.0.3" },
+    judge0Runtime: { languageId: 74 }, // TypeScript (3.7.4)
     monacoLanguage: "typescript",
     defaultCode: `// TypeScript Playground
 interface NumberArray {
@@ -77,7 +77,7 @@ console.log('Sum of numbers:', math.sum());`,
     id: "python",
     label: "Python",
     logoPath: "/python.png",
-    pistonRuntime: { language: "python", version: "3.10.0" },
+    judge0Runtime: { languageId: 71 }, // Python (3.8.1)
     monacoLanguage: "python",
     defaultCode: `# Python Playground
 numbers = [1, 2, 3, 4, 5]
@@ -99,7 +99,7 @@ print(f"Sum of numbers: {numbers_sum}")`,
     id: "java",
     label: "Java",
     logoPath: "/java.png",
-    pistonRuntime: { language: "java", version: "15.0.2" },
+    judge0Runtime: { languageId: 62 }, // Java (OpenJDK 13.0.1)
     monacoLanguage: "java",
     defaultCode: `public class Main {
   public static void main(String[] args) {
@@ -141,7 +141,7 @@ print(f"Sum of numbers: {numbers_sum}")`,
     id: "go",
     label: "Go",
     logoPath: "/go.png",
-    pistonRuntime: { language: "go", version: "1.16.2" },
+    judge0Runtime: { languageId: 60 }, // Go (1.13.5)
     monacoLanguage: "go",
     defaultCode: `package main
 
@@ -182,7 +182,7 @@ func main() {
     id: "rust",
     label: "Rust",
     logoPath: "/rust.png",
-    pistonRuntime: { language: "rust", version: "1.68.2" },
+    judge0Runtime: { languageId: 73 }, // Rust (1.40.0)
     monacoLanguage: "rust",
     defaultCode: `fn main() {
     // Create vector
@@ -215,7 +215,7 @@ func main() {
     id: "cpp",
     label: "C++",
     logoPath: "/cpp.png",
-    pistonRuntime: { language: "cpp", version: "10.2.0" },
+    judge0Runtime: { languageId: 54 }, // C++ (GCC 9.2.0)
     monacoLanguage: "cpp",
     defaultCode: `#include <iostream>
 #include <vector>
@@ -259,7 +259,7 @@ int main() {
     id: "csharp",
     label: "C#",
     logoPath: "/csharp.png",
-    pistonRuntime: { language: "csharp", version: "6.12.0" },
+    judge0Runtime: { languageId: 51 }, // C# (Mono 6.6.0.161)
     monacoLanguage: "csharp",
     defaultCode: `using System;
 using System.Linq;
@@ -290,7 +290,7 @@ class Program {
     id: "ruby",
     label: "Ruby",
     logoPath: "/ruby.png",
-    pistonRuntime: { language: "ruby", version: "3.0.1" },
+    judge0Runtime: { languageId: 72 }, // Ruby (2.7.0)
     monacoLanguage: "ruby",
     defaultCode: `# Create array
 numbers = [1, 2, 3, 4, 5]
@@ -310,30 +310,15 @@ puts "Even numbers: #{even_numbers.join(' ')}"
 sum = numbers.sum
 puts "Sum of numbers: #{sum}"`,
   },
-  swift: {
-    id: "swift",
-    label: "Swift",
-    logoPath: "/swift.png",
-    pistonRuntime: { language: "swift", version: "5.3.3" },
-    monacoLanguage: "swift",
-    defaultCode: `// Create array
-let numbers = [1, 2, 3, 4, 5]
-
-// Print original numbers
-print("Original numbers: \\(numbers)")
-
-// Calculate squares
-let squares = numbers.map { $0 * $0 }
-print("Squared numbers: \\(squares)")
-
-// Filter even numbers
-let evenNumbers = numbers.filter { $0 % 2 == 0 }
-print("Even numbers: \\(evenNumbers)")
-
-// Calculate sum
-let sum = numbers.reduce(0, +)
-print("Sum of numbers: \\(sum)")`,
-  },
+  // Note: Swift is not supported by Judge0 CE
+  // swift: {
+  //   id: "swift",
+  //   label: "Swift",
+  //   logoPath: "/swift.png",
+  //   judge0Runtime: { languageId: 0 },
+  //   monacoLanguage: "swift",
+  //   defaultCode: ``,
+  // },
 };
 
 export const THEMES: Theme[] = [
@@ -346,7 +331,7 @@ export const THEMES: Theme[] = [
 
 export const THEME_DEFINITONS = {
   "github-dark": {
-    base: "vs-dark",
+    base: "vs-dark" as const,
     inherit: true,
     rules: [
       { token: "comment", foreground: "6e7681" },
@@ -370,7 +355,7 @@ export const THEME_DEFINITONS = {
     },
   },
   monokai: {
-    base: "vs-dark",
+    base: "vs-dark" as const,
     inherit: true,
     rules: [
       { token: "comment", foreground: "75715E" },
@@ -394,7 +379,7 @@ export const THEME_DEFINITONS = {
     },
   },
   "solarized-dark": {
-    base: "vs-dark",
+    base: "vs-dark" as const,
     inherit: true,
     rules: [
       { token: "comment", foreground: "586e75" },

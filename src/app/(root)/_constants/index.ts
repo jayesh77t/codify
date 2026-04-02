@@ -331,7 +331,7 @@ export const THEMES: Theme[] = [
 
 export const THEME_DEFINITONS = {
   "github-dark": {
-    base: "vs-dark" as const,
+    base: "vs-dark",
     inherit: true,
     rules: [
       { token: "comment", foreground: "6e7681" },
@@ -355,7 +355,7 @@ export const THEME_DEFINITONS = {
     },
   },
   monokai: {
-    base: "vs-dark" as const,
+    base: "vs-dark",
     inherit: true,
     rules: [
       { token: "comment", foreground: "75715E" },
@@ -379,7 +379,7 @@ export const THEME_DEFINITONS = {
     },
   },
   "solarized-dark": {
-    base: "vs-dark" as const,
+    base: "vs-dark",
     inherit: true,
     rules: [
       { token: "comment", foreground: "586e75" },

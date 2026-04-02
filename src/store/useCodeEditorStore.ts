@@ -1,7 +1,7 @@
 import { CodeEditorState } from "./../types/index";
 import { LANGUAGE_CONFIG } from "@/app/(root)/_constants";
 import { create } from "zustand";
-type MonacoEditor = typeof import("monaco-editor").editor;
+import type { editor as MonacoEditor } from "monaco-editor";
 
 const getInitialState = () => {
   // if we're on the server, return default values

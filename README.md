@@ -1,7 +1,6 @@
 <h1 align="center">✨ SaaS Code Editor ✨</h1>
 
-![Demo App](<img width="1725" height="877" alt="image" src="https://github.com/user-attachments/assets/97a8e9fb-a295-4acf-afe9-6d94e221290b" />)
-
+![Demo App](/public/github-img.png)
 [Live Website](https://codify-three.vercel.app/)
 
 Highlights:
